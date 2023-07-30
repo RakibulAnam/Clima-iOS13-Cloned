@@ -30,12 +30,30 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
         }else{
             print("Enter City")
         }
+        searchTextField.endEditing(true)
         
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print(searchTextField.text!)
+        searchTextField.endEditing(true)
         return true
+    }
+    
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if textField.text != ""{
+            return true
+        }else{
+            textField.placeholder = "Type Something Man"
+            return false
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        // Get what the user typed in the text field when done editing
+        searchTextField.text = ""
     }
     
 }
