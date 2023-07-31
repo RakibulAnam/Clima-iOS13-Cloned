@@ -78,7 +78,16 @@ struct WeatherManger{
         do{
             // decoder decodes the data to Weather Data structure and puts the value from weatherData parameter
            let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-            print("The Temperature of \(decodedData.name) is \(decodedData.main.temp) and the weather is \(decodedData.weather[0].description)")
+//            print("The Temperature of \(decodedData.name) is \(decodedData.main.temp) and the weather is \(decodedData.weather[0].description)")
+            let id = decodedData.weather[0].id
+            let name = decodedData.name
+            let temp = decodedData.main.temp
+            
+            let weather = WeatherModel(cityName: name, temp: temp, conditionId: id)
+            
+            
+            
+            
         }catch{
             print(error)
         }
