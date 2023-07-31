@@ -16,6 +16,8 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var searchTextField: UITextField!
     
+    var weatherManger = WeatherManger()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,10 +32,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
         }else{
             print("Enter City")
         }
+        
         searchTextField.endEditing(true)
         
     }
     
+    // this function is called when the return key in the keyboard is pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print(searchTextField.text!)
         searchTextField.endEditing(true)
@@ -53,6 +57,9 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         // Get what the user typed in the text field when done editing
+        if let city = searchTextField.text{
+            weatherManger.fetchWeather(cityName: city)
+        }
         searchTextField.text = ""
     }
     
