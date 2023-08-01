@@ -9,7 +9,7 @@
 import Foundation
 
 // Making the struct Decodable so that it can decode itself form external representation
-struct WeatherData : Decodable{
+struct WeatherData : Codable{
     
     let name : String
     let visibility : Int
@@ -22,13 +22,13 @@ struct WeatherData : Decodable{
     
 }
 
-struct Main : Decodable{
+struct Main : Codable{
     let temp : Double
     let feels_like : Double
     let humidity : Int
 }
 
-struct Weather : Decodable{
+struct Weather : Codable{
     
     let id : Int
     let main : String

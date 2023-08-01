@@ -8,21 +8,31 @@
 
 import Foundation
 
+
+protocol WeatherManagerDelegate{
+    func didUpdateWeather(_ weatherManager : WeatherManger ,weather: WeatherModel)
+    func didFailWithError(error : Error)
+}
+
 struct WeatherManger{
     
     // removing q = city name form the string and adding it dynamically, as the order of the parameters does not matter
     
+    
+    
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=783b4c69f0216c6517767d5200f12680&units=metric"
+    
+    var delegate : WeatherManagerDelegate?
     
     func fetchWeather(cityName: String){
         let urlString = "\(weatherURL)&q=\(cityName)"
         
         print(urlString)
-        performRequest(urlSring: urlString)
+        performRequest(with: urlString)
     }
     
     
-    func performRequest(urlSring : String){
+    func performRequest(with urlSring : String){
         //Create URL
         
         if let url = URL(string: urlSring){
@@ -39,20 +49,26 @@ struct WeatherManger{
             
             let task = session.dataTask(with: url) { data, response, error in
                 if error != nil{
-                    print(error!)
+                    delegate?.didFailWithError(error: error!)
                     return
                 }
                 
                 if let safeData = data{
-                    self.parseJSON(weatherData: safeData)
+                    
+                    if let weather = self.parseJSON(safeData){
+                        self.delegate?.didUpdateWeather(self, weather: weather)
+                    }
                 }
             }
+            
+            
+        
             
             //Run Task
             task.resume()
         }
         
-        
+     
     }
     
     
@@ -68,7 +84,7 @@ struct WeatherManger{
 //        }
 //    }
     
-    func parseJSON(weatherData:Data){
+    func parseJSON(_ weatherData:Data) -> WeatherModel?{
         // Create a structure that the weather data will come back in
         
         let decoder = JSONDecoder()
@@ -85,11 +101,12 @@ struct WeatherManger{
             
             let weather = WeatherModel(cityName: name, temp: temp, conditionId: id)
             
-            
+            return weather
             
             
         }catch{
-            print(error)
+            delegate?.didFailWithError(error: error)
+            return nil
         }
         
     }
